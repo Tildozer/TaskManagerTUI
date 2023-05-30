@@ -2,6 +2,8 @@
 #include <curses.h>
 #include <csignal>
 #include <termios.h>
+#include <cmath>
+
 
 using namespace std;
 //using namespace ;
@@ -19,7 +21,8 @@ int main(int args, char *argv[]) {
     keypad(stdscr, TRUE);  /* enable keyboard mapping */
     (void) nonl();         /* tell curses not to do NL->CR/NL on output */
     (void) cbreak();       /* take input chars one at a time, no wait for \n */
-    (void) echo();         /* echo input - in color */
+    (void) noecho();         /* echo input - in color */
+    (void) keypad(stdscr, TRUE);
 
     if (has_colors())
     {
@@ -40,11 +43,36 @@ int main(int args, char *argv[]) {
         init_pair(7, COLOR_WHITE,   COLOR_BLACK);
     }
 
-    for (int i = 0; i < 43; i++) {
-        int c = getch();     /* refresh, accept single keystroke of input */
+    bool saved {false};
+    int x {0}, y {5};
+    move(y, x);
+    while (!saved) {
+        int c = getch();
         attrset(COLOR_PAIR(num % 8));
         num++;
-        cout << i << " ";
+        if(c != 410 && c != -1) {
+            switch (c) {
+                case 13:
+                    saved = true;
+                    break;
+                case 127:
+                    printw("\b ");
+                    x = max(0,--x);
+                    break;
+                case 27:
+                    clrtoeol();
+//                    y--;
+                    break;
+                default:
+                    printw("%c", char(c));
+                    x++;
+                    move(y, x);
+            }
+            move(0, 0);
+            printw("%i", x);
+            move(y, x);
+        }
+//        refresh();
         /* process the command keystroke */
     }
 

@@ -42,7 +42,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -arch arm64 -isysroot /Users/tildozer/Downloads/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics"
+					"fragment" : "-g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -fcolor-diagnostics"
 				},
 				{
 					"fragment" : "-std=gnu++20"
@@ -78,12 +78,12 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/Users/tildozer/Downloads/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/usr/lib/libcurses.tbd",
+				"fragment" : "/Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/lib/libcurses.tbd",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/Users/tildozer/Downloads/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/usr/lib/libform.tbd",
+				"fragment" : "/Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/lib/libform.tbd",
 				"role" : "libraries"
 			}
 		],

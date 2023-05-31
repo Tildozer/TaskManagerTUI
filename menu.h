@@ -5,6 +5,7 @@
 #include <curses.h>
 #include <csignal>
 #include <termios.h>
+#include <map>
 
 #ifndef TASKMANAGERTUI_MENU_H
 #define TASKMANAGERTUI_MENU_H
@@ -13,7 +14,7 @@ using namespace std;
 
 
 namespace MenuBar {
-    void MakeMenu() {
+    map<string, WINDOW *> MakeMenu() {
         int yMax, xMax;
         getmaxyx(stdscr, yMax, xMax);
         int oneThird = xMax/3;
@@ -28,6 +29,13 @@ namespace MenuBar {
         wgetch(createTask);
         wgetch(viewAllTask);
         wgetch(viewDayTask);
+        wprintw(createTask, "+ create task");
+        wprintw(viewAllTask, "- see all tasks");
+        wprintw(viewDayTask, "- Today's task");
+        wrefresh(createTask);
+        wrefresh(viewAllTask);
+        wrefresh(viewDayTask);
+        return {{"create", createTask}, {"all",viewAllTask}, {"day",viewDayTask}};
     }
 }
 

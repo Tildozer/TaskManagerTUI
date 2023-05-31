@@ -7,6 +7,7 @@
 #include "menu.h"
 
 using namespace std;
+using namespace MenuBar;
 
 static void finish(int sig);
 
@@ -15,18 +16,19 @@ int main(int args, char *argv[]) {
     (void) signal(SIGINT, finish);      /* arrange interrupts to terminate */
 
     (void) initscr();      /* initialize the curses library */
-    async MenuBar::MakeMenu();
 
     keypad(stdscr, TRUE);  /* enable keyboard mapping */
     (void) nonl();         /* tell curses not to do NL->CR/NL on output */
     (void) cbreak();       /* take input chars one at a time, no wait for \n */
     (void) noecho();         /* echo input - in color */
     (void) keypad(stdscr, TRUE);
+    scrollok(stdscr, FALSE);
 
+    map<string, WINDOW *> menu = MakeMenu();
     bool saved {false};
-    int x {0}, y {5};
+    int x {0}, y {3};
+
     move(y, x);
-    refresh();
     while (!saved) {
         int c = getch();
         if (c != 410 && c != -1) {
@@ -53,7 +55,7 @@ int main(int args, char *argv[]) {
                     mvprintw(y, x, "%c", char(c));
                     x++;
             }
-            mvprintw(0, 0, "%i", c);
+            mvprintw(2, 2, "%i", c);
             move(y, x);
         }
         /* process the command keystroke */

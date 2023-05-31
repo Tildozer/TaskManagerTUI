@@ -3,76 +3,59 @@
 #include <csignal>
 #include <termios.h>
 #include <cmath>
-
+#include <future>
+#include "menu.h"
 
 using namespace std;
-//using namespace ;
 
 static void finish(int sig);
 
 int main(int args, char *argv[]) {
-    int num = 0;
-
     /* initialize your non-curses data structures here */
-
     (void) signal(SIGINT, finish);      /* arrange interrupts to terminate */
 
     (void) initscr();      /* initialize the curses library */
+    async MenuBar::MakeMenu();
+
     keypad(stdscr, TRUE);  /* enable keyboard mapping */
     (void) nonl();         /* tell curses not to do NL->CR/NL on output */
     (void) cbreak();       /* take input chars one at a time, no wait for \n */
     (void) noecho();         /* echo input - in color */
     (void) keypad(stdscr, TRUE);
 
-    if (has_colors())
-    {
-        start_color();
-
-        /*
-         * Simple color assignment, often all we need.  Color pair 0 cannot
-         * be redefined.  This example uses the same value for the color
-         * pair as for the foreground color, though of course that is not
-         * necessary:
-         */
-        init_pair(1, COLOR_RED,     COLOR_BLACK);
-        init_pair(2, COLOR_GREEN,   COLOR_BLACK);
-        init_pair(3, COLOR_YELLOW,  COLOR_BLACK);
-        init_pair(4, COLOR_BLUE,    COLOR_BLACK);
-        init_pair(5, COLOR_CYAN,    COLOR_BLACK);
-        init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-        init_pair(7, COLOR_WHITE,   COLOR_BLACK);
-    }
-
     bool saved {false};
     int x {0}, y {5};
     move(y, x);
+    refresh();
     while (!saved) {
         int c = getch();
-        attrset(COLOR_PAIR(num % 8));
-        num++;
-        if(c != 410 && c != -1) {
+        if (c != 410 && c != -1) {
             switch (c) {
                 case 13:
                     saved = true;
                     break;
                 case 127:
-                    printw("\b ");
-                    x = max(0,--x);
-                    break;
-                case 27:
-                    clrtoeol();
-//                    y--;
+                    if (x == 0) {
+                        if(y > 5){
+                            x = 20;
+                            mvprintw(y, x, "\b");
+                        }
+                    } else {
+                        mvprintw(y, x, "\b ");
+                        --x;
+                    }
                     break;
                 default:
-                    printw("%c", char(c));
+                    if (x == 20) {
+                        x = 0;
+                        y++;
+                    }
+                    mvprintw(y, x, "%c", char(c));
                     x++;
-                    move(y, x);
             }
-            move(0, 0);
-            printw("%i", x);
+            mvprintw(0, 0, "%i", c);
             move(y, x);
         }
-//        refresh();
         /* process the command keystroke */
     }
 

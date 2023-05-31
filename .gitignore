@@ -1,3 +1,4 @@
 .DS_Store
 .env
 cmake-build-debug
+cmake-build-debug-event-trace

@@ -16,6 +16,8 @@ int main(int args, char *argv[]) {
     (void) signal(SIGINT, finish);      /* arrange interrupts to terminate */
 
     (void) initscr();      /* initialize the curses library */
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
 
     keypad(stdscr, TRUE);  /* enable keyboard mapping */
     (void) nonl();         /* tell curses not to do NL->CR/NL on output */
@@ -24,21 +26,28 @@ int main(int args, char *argv[]) {
     (void) keypad(stdscr, TRUE);
     scrollok(stdscr, FALSE);
 
-    map<string, WINDOW *> menu = MakeMenu();
-    bool saved {false};
-    int x {0}, y {3};
+    map<string, WINDOW *> menu = MakeMenu(yMax, xMax);
+    bool selected{false};
+    bool exit{false};
+    int x{0}, y{(yMax / 5) * 2};
 
     move(y, x);
-    while (!saved) {
+    while (!selected && !exit) {
         int c = getch();
         if (c != 410 && c != -1) {
             switch (c) {
+                case 258:
+                case 259:
+                    break;
+                case 277:
+                    exit = true;
+                    break;
                 case 13:
-                    saved = true;
+                    selected = true;
                     break;
                 case 127:
                     if (x == 0) {
-                        if(y > 5){
+                        if (y > 5) {
                             x = 20;
                             mvprintw(y, x, "\b");
                         }
@@ -55,7 +64,7 @@ int main(int args, char *argv[]) {
                     mvprintw(y, x, "%c", char(c));
                     x++;
             }
-            mvprintw(2, 2, "%i", c);
+            mvprintw(yMax / 5 + 2, 0, "%i", c);
             move(y, x);
         }
         /* process the command keystroke */

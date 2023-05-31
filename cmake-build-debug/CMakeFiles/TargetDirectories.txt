@@ -1,3 +1,0 @@
-/Users/tildozer/Desktop/personalProjects/TaskManagerTUI/cmake-build-debug/CMakeFiles/TaskManagerTUI.dir
-/Users/tildozer/Desktop/personalProjects/TaskManagerTUI/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/tildozer/Desktop/personalProjects/TaskManagerTUI/cmake-build-debug/CMakeFiles/rebuild_cache.dir

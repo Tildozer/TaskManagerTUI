@@ -11,7 +11,7 @@ using namespace MenuBar;
 
 static void finish(int sig);
 
-int main(int args, char *argv[]) {
+int main() {
     /* initialize your non-curses data structures here */
     (void) signal(SIGINT, finish);      /* arrange interrupts to terminate */
 
@@ -25,25 +25,33 @@ int main(int args, char *argv[]) {
     (void) noecho();         /* echo input - in color */
     (void) keypad(stdscr, TRUE);
     scrollok(stdscr, FALSE);
+    int oneThird = xMax / 3;
+    int oneFifth = yMax / 5;
 
-    map<string, WINDOW *> menu = MakeMenu(yMax, xMax);
+    WINDOW *createTask = newwin(oneFifth, oneThird, 0, 0);
+    WINDOW *viewAllTask = newwin(oneFifth, oneThird, 0, oneThird + 1);
+    WINDOW *editTask = newwin(oneFifth, oneThird, 0, (oneThird + 1) * 2);
+    WINDOW *controls = newwin(3, xMax, yMax - 3, 0);
+    vector<WINDOW *> mainMenu{createTask, viewAllTask, editTask, controls};
+    auto create {"- Create a task"},
+            all {"- View all task"},
+            edit {"- Edit a task"},
+            ctrl {"[ Esc - Exit ] [ c - CreateTask] [ a - see all ] [ e - edit task ]"};
+
+    vector<const char *> mainMenuInfo{create, all, edit, ctrl};
+    MakeMenu(mainMenu, mainMenuInfo);
     bool selected{false};
     bool exit{false};
     int x{0}, y{(yMax / 5) * 2};
 
     move(y, x);
-    while (!selected && !exit) {
+    while (!exit) {
         int c = getch();
         if (c != 410 && c != -1) {
             switch (c) {
-                case 258:
-                case 259:
-                    break;
-                case 277:
-                    exit = true;
-                    break;
+                case 27:
                 case 13:
-                    selected = true;
+                    exit = true;
                     break;
                 case 127:
                     if (x == 0) {
@@ -57,12 +65,7 @@ int main(int args, char *argv[]) {
                     }
                     break;
                 default:
-                    if (x == 20) {
-                        x = 0;
-                        y++;
-                    }
-                    mvprintw(y, x, "%c", char(c));
-                    x++;
+                    break;
             }
             mvprintw(yMax / 5 + 2, 0, "%i", c);
             move(y, x);

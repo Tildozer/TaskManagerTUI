@@ -25,21 +25,9 @@ int main() {
     (void) noecho();         /* echo input - in color */
     (void) keypad(stdscr, TRUE);
     scrollok(stdscr, FALSE);
-    int oneThird = xMax / 3;
-    int oneFifth = yMax / 5;
+    int selection = 1;
+    selectMenu(1, yMax, xMax);
 
-    WINDOW *createTask = newwin(oneFifth, oneThird, 0, 0);
-    WINDOW *viewAllTask = newwin(oneFifth, oneThird, 0, oneThird + 1);
-    WINDOW *editTask = newwin(oneFifth, oneThird, 0, (oneThird + 1) * 2);
-    WINDOW *controls = newwin(3, xMax, yMax - 3, 0);
-    vector<WINDOW *> mainMenu{createTask, viewAllTask, editTask, controls};
-    auto create {"- Create a task"},
-            all {"- View all task"},
-            edit {"- Edit a task"},
-            ctrl {"[ Esc - Exit ] [ c - CreateTask] [ a - see all ] [ e - edit task ]"};
-
-    vector<const char *> mainMenuInfo{create, all, edit, ctrl};
-    MakeMenu(mainMenu, mainMenuInfo);
     bool selected{false};
     bool exit{false};
     int x{0}, y{(yMax / 5) * 2};
@@ -53,7 +41,7 @@ int main() {
                 case 13:
                     exit = true;
                     break;
-                case 127:
+                case 127: {
                     if (x == 0) {
                         if (y > 5) {
                             x = 20;
@@ -64,6 +52,7 @@ int main() {
                         --x;
                     }
                     break;
+                }
                 default:
                     break;
             }

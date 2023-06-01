@@ -48,7 +48,7 @@ void selectMenu(int selection) {
         }
         case 2: {
             vector<WINDOW *> currMenu{creationMenu()};
-            auto blank {""};
+            auto blank{""};
             auto ctrlCreate{" [ tab -> - next ] [ Esc - main menu ]"};
             vector<const char *> createMenuInfo{blank, blank, blank, ctrlCreate};
 

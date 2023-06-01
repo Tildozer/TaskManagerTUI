@@ -11,25 +11,33 @@
 #define TASKMANAGERTUI_MENU_H
 
 using namespace std;
+
 //I created functions to make each menu, so I could switch between menus with just one function call.
-    vector<WINDOW *> mainMenu(int yMax, int xMax) {
-        int oneThird = xMax / 3;
-        int oneFifth = yMax / 5;
+vector<WINDOW *> mainMenu() {
+    int yMax, xMax;
+    getmaxyx(stdscr, yMax, xMax);
+    int oneThird = xMax / 3;
+    int oneFifth = yMax / 5;
 
-        WINDOW *createTask = newwin(oneFifth, oneThird - 1, 0, 0);
-        WINDOW *viewAllTask = newwin(oneFifth, oneThird - 1, 0, oneThird + 1);
-        WINDOW *editTask = newwin(oneFifth, oneThird - 1, 0, (oneThird) * 2 + 1);
-        WINDOW *controls = newwin(3, xMax, yMax - 3, 0);
-        vector<WINDOW *> mainMenu{createTask, viewAllTask, editTask, controls};
+    WINDOW *createTask = newwin(oneFifth, oneThird - 1, 0, 0);
+    WINDOW *viewAllTask = newwin(oneFifth, oneThird - 1, 0, oneThird + 1);
+    WINDOW *editTask = newwin(oneFifth, oneThird - 1, 0, (oneThird) * 2 + 1);
+    WINDOW *controls = newwin(3, xMax, yMax - 3, 0);
+    vector<WINDOW *> mainMenu{createTask, viewAllTask, editTask, controls};
 
-        return mainMenu;
-    }
+    return mainMenu;
+}
 
 namespace MenuBar {
 
     void makeMenu(const vector<WINDOW *> &wins, vector<const char *> &menuInfo) {
+
         for (int i = 0; i < wins.size(); ++i) {
+//            attron(COLOR_PAIR(1));
+            wattrset(wins[i], COLOR_PAIR(1));
             box(wins[i], 0, 0);
+            wattrset(wins[i], COLOR_PAIR(1));
+//            attroff(COLOR_PAIR(1));
             refresh();
             mvwprintw(wins[i], 1, 2, menuInfo[i]);
             wrefresh(wins[i]);
@@ -37,7 +45,7 @@ namespace MenuBar {
         }
     }
 
-    void selectMenu(int selection, int yMax, int xMax) {
+    void selectMenu(int selection) {
         clear();
         refresh();
         switch (selection) {
@@ -48,7 +56,7 @@ namespace MenuBar {
                         ctrl{"[ Esc - Exit ] [ c - CreateTask] [ a - see all ] [ e - edit task ]"};
 
                 vector<const char *> mainMenuInfo{create, all, edit, ctrl};
-                vector<WINDOW *> currMenu {mainMenu(yMax, xMax)};
+                vector<WINDOW *> currMenu{mainMenu()};
                 makeMenu(currMenu, mainMenuInfo);
                 break;
             }

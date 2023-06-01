@@ -33,11 +33,9 @@ namespace MenuBar {
     void makeMenu(const vector<WINDOW *> &wins, vector<const char *> &menuInfo) {
 
         for (int i = 0; i < wins.size(); ++i) {
-//            attron(COLOR_PAIR(1));
             wattrset(wins[i], COLOR_PAIR(1));
             box(wins[i], 0, 0);
             wattrset(wins[i], COLOR_PAIR(1));
-//            attroff(COLOR_PAIR(1));
             refresh();
             mvwprintw(wins[i], 1, 2, menuInfo[i]);
             wrefresh(wins[i]);

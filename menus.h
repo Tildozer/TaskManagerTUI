@@ -29,6 +29,8 @@ void makeMenu(const vector<WINDOW *> &wins, vector<const char *> &menuInfo) {
 
 static void mainMenuHelper();
 
+static void creationMenuHelper();
+
 void selectMenu(int selection) {
     clear();
     refresh();
@@ -42,17 +44,16 @@ void selectMenu(int selection) {
             vector<WINDOW *> currMenu{mainMenu()};
 
             makeMenu(currMenu, mainMenuInfo);
-            mainMenuHelper();
-            break;
+            return mainMenuHelper();
         }
         case 2: {
             vector<WINDOW *> currMenu{creationMenu()};
-            auto ctrlCreate{" [ tab -> - next ]"};
-            vector<const char *> createMenuInfo{ctrlCreate};
+            auto blank {""};
+            auto ctrlCreate{" [ tab -> - next ] [ Esc - main menu ]"};
+            vector<const char *> createMenuInfo{blank, blank, blank, ctrlCreate};
 
             makeMenu(currMenu, createMenuInfo);
-            getch();
-            break;
+            return creationMenuHelper();
         }
         default : {
             break;
@@ -67,31 +68,44 @@ static void mainMenuHelper() {
     int x{0}, y{yMax - 4};
 
     move(y, x);
-        int c = getch();
-        switch (c) {
+    int c = getch();
+    switch (c) {
 //                Esc || Enter
-            case 27:
-            case 13:
-                break;
+        case 27:
+        case 13:
+            break;
 //                presses a
-            case 97: {
-                break;
-            }
-//                presses c
-            case 99: {
-                selectMenu(2);
-                break;
-            }
-//                presses e
-            case 101: {
-                break;
-            }
-            default:
-                mainMenuHelper();
-                break;
+        case 97: {
+            break;
         }
-        mvprintw(yMax / 5 + 2, 0, "%i", c);
-        move(y, x);
+//                presses c
+        case 99: {
+            return selectMenu(2);
+        }
+//                presses e
+        case 101: {
+            break;
+        }
+        default:
+            mvprintw(yMax / 5 + 2, 0, "%i", c);
+            move(y, x);
+            return mainMenuHelper();
+    }
+
 };
+
+static void creationMenuHelper() {
+//    auto exitChar = new char[913];
+//    int  = getnstr(exitChar, 50);
+    int c = getch();
+    switch (c) {
+        case 27: {
+            return selectMenu(1);
+        }
+        default: {
+            return creationMenuHelper();
+        }
+    }
+}
 
 #endif //TASKMANAGERTUI_MENU_H

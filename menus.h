@@ -6,6 +6,7 @@
 #include <csignal>
 #include <termios.h>
 #include <map>
+#include <string>
 #include "mainMenu.h"
 #include "createMenu.h"
 
@@ -29,17 +30,17 @@ void makeMenu(const vector<WINDOW *> &wins, vector<const char *> &menuInfo) {
 
 static void mainMenuHelper();
 
-static void creationMenuHelper();
+static void creationMenuHelper(vector<WINDOW *> &wins);
 
 void selectMenu(int selection) {
     clear();
     refresh();
     switch (selection) {
         case 1: {
-            auto create{"- Create a task"},
-                    all{"- View all task"},
-                    edit{"- Edit a task"},
-                    ctrl{"[ Esc - Exit ] [ c - CreateTask] [ a - see all ] [ e - edit task ]"};
+            auto create{"- Create a task"};
+            auto all{"- View all task"};
+            auto edit{"- Edit a task"};
+            auto ctrl{"[ Esc - Exit ] [ c - CreateTask] [ a - see all ] [ e - edit task ]"};
             vector<const char *> mainMenuInfo{create, all, edit, ctrl};
             vector<WINDOW *> currMenu{mainMenu()};
 
@@ -47,13 +48,13 @@ void selectMenu(int selection) {
             return mainMenuHelper();
         }
         case 2: {
-            vector<WINDOW *> currMenu{creationMenu()};
+            vector<WINDOW *> currentMenu{creationMenu()};
             auto blank{""};
             auto ctrlCreate{" [ tab -> - next ] [ Esc - main menu ]"};
             vector<const char *> createMenuInfo{blank, blank, blank, ctrlCreate};
 
-            makeMenu(currMenu, createMenuInfo);
-            return creationMenuHelper();
+            makeMenu(currentMenu, createMenuInfo);
+            return creationMenuHelper(currentMenu);
         }
         default : {
             break;
@@ -94,17 +95,23 @@ static void mainMenuHelper() {
 
 };
 
-static void creationMenuHelper() {
-//    auto exitChar = new char[913];
-//    int  = getnstr(exitChar, 50);
+static void creationMenuHelper(vector<WINDOW *> &wins) {
     int c = getch();
     switch (c) {
         case 27: {
             return selectMenu(1);
         }
-        default: {
-            return creationMenuHelper();
+        case 9: {
+            getName(wins[0]);
+            move(0,0);
+            getch();
+            break;
         }
+        default: {
+    printw("%i", c);
+            return creationMenuHelper(wins);
+        }
+
     }
 }
 

@@ -10,6 +10,36 @@ using namespace std;
 #ifndef TASKMANAGERTUI_CREATEMENU_H
 #define TASKMANAGERTUI_CREATEMENU_H
 
+
+string getName(WINDOW *win) {
+    int y{1}, x{1};
+    wmove(win, y, x);
+    wrefresh(win);
+    string name{};
+    bool done{false};
+    int length{};
+    while (length < 50 && !done) {
+        int l = getch();
+        if (l == 9) {
+            done = true;
+        } else {
+            if (l == 127) {
+                name = name.substr(0, length - 1);
+                length--;
+                x--;
+            } else {
+                auto letter = static_cast<char>(l);
+                name = letter;
+                length++;
+                x++;
+            }
+            mvwprintw(win, y, x, name.c_str());
+            wrefresh(win);
+        }
+    }
+    return name;
+}
+
 vector<WINDOW *> creationMenu() {
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);

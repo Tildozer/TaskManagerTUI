@@ -102,13 +102,16 @@ static void creationMenuHelper(vector<WINDOW *> &wins) {
             return selectMenu(1);
         }
         case 9: {
-            getName(wins[0]);
-            move(0,0);
+            string name = getDetail(wins[0], 50);
+            string details = getDetail(wins[1], 250);
+            string completionDate = getDetail(wins[2], 10);
+            
+            move(0, 0);
             getch();
             break;
         }
         default: {
-    printw("%i", c);
+            printw("%i", c);
             return creationMenuHelper(wins);
         }
 

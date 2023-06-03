@@ -11,33 +11,34 @@ using namespace std;
 #define TASKMANAGERTUI_CREATEMENU_H
 
 
-string getName(WINDOW *win) {
+string getDetail(WINDOW *win, int maxLength) {
     int y{1}, x{1};
     wmove(win, y, x);
     wrefresh(win);
-    string name{};
+    string detail{};
     bool done{false};
     int length{};
-    while (length < 50 && !done) {
+    while (length < maxLength && !done) {
         int l = getch();
         if (l == 9) {
             done = true;
         } else {
             if (l == 127) {
-                name = name.substr(0, length - 1);
+                detail.pop_back();
                 length--;
+                mvwprintw(win, y, x, " ");
                 x--;
             } else {
                 auto letter = static_cast<char>(l);
-                name = letter;
+                detail = letter;
                 length++;
                 x++;
             }
-            mvwprintw(win, y, x, name.c_str());
+            mvwprintw(win, y, x, detail.c_str());
             wrefresh(win);
         }
     }
-    return name;
+    return detail;
 }
 
 vector<WINDOW *> creationMenu() {

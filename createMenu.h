@@ -24,17 +24,20 @@ string getDetail(WINDOW *win, int maxLength) {
             done = true;
         } else {
             if (l == 127) {
-                detail.pop_back();
-                length--;
-                mvwprintw(win, y, x, " ");
-                x--;
+                if (x > 1) {
+                    detail.pop_back();
+                    length--;
+                    x--;
+                    mvwprintw(win, y, x, " ");
+                }
             } else {
                 auto letter = static_cast<char>(l);
-                detail = letter;
+                detail += letter;
                 length++;
                 x++;
             }
-            mvwprintw(win, y, x, detail.c_str());
+            mvwprintw(win, 1, 1, detail.c_str());
+            wmove(win, y, x);
             wrefresh(win);
         }
     }
@@ -55,7 +58,7 @@ vector<WINDOW *> creationMenu() {
 
     auto completionDate{"Goal day to complete:"};
     mvwprintw(stdscr, 9, 0, completionDate);
-    WINDOW *goalCompletionDate{newwin(5, xMax - 21, 8, 21)};
+    WINDOW *goalCompletionDate{newwin(3, xMax - 21, 8, 21)};
 
     WINDOW *ctrlMenu{newwin(3, xMax, yMax - 3, 0)};
     move(yMax - 4, 0);

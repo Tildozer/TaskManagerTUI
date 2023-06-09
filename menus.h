@@ -15,6 +15,7 @@
 
 using namespace std;
 
+
 void makeMenu(const vector<WINDOW *> &wins, vector<const char *> &menuInfo) {
 
     for (int i = 0; i < wins.size(); ++i) {
@@ -105,7 +106,7 @@ static void creationMenuHelper(vector<WINDOW *> &wins) {
             string name = getDetail(wins[0], 50);
             string details = getDetail(wins[1], 250);
             string completionDate = getDetail(wins[2], 10);
-            
+
             move(0, 0);
             getch();
             break;
